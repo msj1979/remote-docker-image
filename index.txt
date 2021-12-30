@@ -1,0 +1,17 @@
+node {
+    withCredentials([sshUserPrivateKey(credentialsId: 'nodemachine', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'suranga')]){
+        remote.user = suranga
+        remote.identityFile = identity
+        stage("check"){
+            sshCommand remote: remote, command: "docker ps -a"
+            sshCommand remote: remote, command: "docker images"
+        }
+        stage("deploy"){
+            //sshCommand remote: remote, command: "docker commit 8d1f7ee9ea78 surangajayalath/hello_msj:v1"
+            //sshCommand remote: remote, command: "docker images"
+            sshCommand remote: remote, command: "docker tag 5f85429bb0ac surangajayalath/hello_msj:v1"
+            sshCommand remote: remote, command: "docker push surangajayalath/hello_msj:v1"
+        }
+
+    }
+}
